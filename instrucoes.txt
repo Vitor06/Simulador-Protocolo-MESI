@@ -1,0 +1,25 @@
+Instruções de compilação no Linux:
+
+- Baixar JDK 11
+
+- Abra a pasta scr/main/java e entre no terminal:
+  javac ProjectCacheMem.java -Xlint
+
+- Para executar entre no terminal:
+  java ProjectCacheMem
+
+Instruções para criação de arquivo JAR no Linux:
+
+- Baixar JDK 11
+
+- Entre no terminal:
+  sudo apt install maven
+
+- Entre no terminal no diretorio project_mem_cache:
+  mvn package
+
+Instruções para executar arquivo JAR no Linux:
+
+- Entre no terminal:
+  cd /target
+  java -jar project_mem_cache-1.0-SNAPSHOT.jar
