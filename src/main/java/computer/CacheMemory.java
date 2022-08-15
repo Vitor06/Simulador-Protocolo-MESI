@@ -9,7 +9,7 @@ public class CacheMemory {
     public static int maxValuesPerBlock = 2;
     public static int tagPosition = maxValuesPerBlock;
     public static int modifiedFlagPosition = maxValuesPerBlock + 1;
-    private final int[][] values = new int[maxBlocks][maxValuesPerBlock + 2];
+    private final int[][] values = new int[maxBlocks][maxValuesPerBlock + 3];
     private final SubstitionMethods substitionMethod;
     private final Queue<Integer> queue = new Queue<Integer>(Integer.class, maxBlocks);
     private final RAM ram;
@@ -153,7 +153,7 @@ public class CacheMemory {
 
     void printCache() {
         System.out.println("----------Cache----------");
-        System.out.println("V1 | V2 | TAG | MOD");
+        System.out.println("V1 | V2 | TAG | MOD |TAG MESI");
         for (int[] i : values) {
             for (int j : i) {
                 System.out.print(j + " ");

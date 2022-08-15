@@ -5,11 +5,13 @@ import java.util.Scanner;
 public class CPU {
     private final RAM ram;
     private final CacheMemory cacheMemory;
+    private String cpuName;
 
-    public CPU(SubstitionMethods substitutionMethod) {
-        ram = new RAM();
+    public CPU(SubstitionMethods substitutionMethod,RAM ram,String cpuName) {
         ram.populateRAMWithRandomValues();
         cacheMemory = new CacheMemory(ram, substitutionMethod);
+        this.cpuName = cpuName;
+        this.ram = ram;
     }
 
     public int getValueFromMemoryPosition(int memoryPosition) {
@@ -67,4 +69,8 @@ public class CPU {
                 System.out.println("\nComando não existente, tente novamente\n");
         }
     }
+    public String getCpuName() {
+        return cpuName;
+    }
+
 }
