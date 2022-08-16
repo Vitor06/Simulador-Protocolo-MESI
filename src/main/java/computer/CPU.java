@@ -3,32 +3,36 @@ package computer;
 import java.util.Scanner;
 
 public class CPU {
+    MESI mesi  = new MESI();
     private final RAM ram;
-    private final CacheMemory cacheMemory;
-    private String cpuName;
 
-    public CPU(SubstitionMethods substitutionMethod,RAM ram,String cpuName) {
+
+
+    private final CacheMemory cacheMemory;
+    private  int numCpu;
+
+    public CPU(SubstitionMethods substitutionMethod,RAM ram, int numCpu) {
         ram.populateRAMWithRandomValues();
         cacheMemory = new CacheMemory(ram, substitutionMethod);
-        this.cpuName = cpuName;
         this.ram = ram;
+        this.numCpu = numCpu;
     }
 
-    public int getValueFromMemoryPosition(int memoryPosition) {
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
+    public int getValueFromMemoryPosition(int memoryPosition,CPU [] arrayCpu,int posCpu) {
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,arrayCpu,posCpu);
         return block[memoryPosition % CacheMemory.maxValuesPerBlock];
     }
 
-    public void updateValueOnMemoryPosition(int newValue, int memoryPosition) {
+    public void updateValueOnMemoryPosition(int newValue, int memoryPosition,CPU [] arrayCpu,int posCpu) {
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition, arrayCpu,posCpu);
         int valuePositionInArray =
                 memoryPosition - (CacheMemory.maxValuesPerBlock * blockTag);
         block[valuePositionInArray] = newValue;
         cacheMemory.updateBlock(block, blockTag);
     }
 
-    public void handleCommand(String cmd) {
+    public void handleCommand(String cmd,CPU [] arrayCpu,int posCpu) {
         Scanner scanner = new Scanner(System.in);
         int chosenMemoryPosition;
         int newValue;
@@ -43,16 +47,21 @@ public class CPU {
                             " (última posição disponível é a " + (RAM.ramLength-1) + ")");
                     break;
                 }
+                //***
 
                 System.out.println("Valor na posição " + chosenMemoryPosition
-                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition));
+                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition, arrayCpu,posCpu));
                 break;
             case "A":
+
                 System.out.println("Qual posição você deseja atualizar?");
                 chosenMemoryPosition = scanner.nextInt();
+                //***
+
+
                 System.out.println("Qual deve ser o novo valor na posição " + chosenMemoryPosition + "?");
                 newValue = scanner.nextInt();
-                updateValueOnMemoryPosition(newValue, chosenMemoryPosition);
+                updateValueOnMemoryPosition(newValue, chosenMemoryPosition, arrayCpu,posCpu);
                 break;
             case "VR":
                 ram.printRam();
@@ -69,8 +78,12 @@ public class CPU {
                 System.out.println("\nComando não existente, tente novamente\n");
         }
     }
-    public String getCpuName() {
-        return cpuName;
+
+    public CacheMemory getCacheMemory() {
+        return cacheMemory;
     }
 
+    public int getNumCpu() {
+        return numCpu;
+    }
 }

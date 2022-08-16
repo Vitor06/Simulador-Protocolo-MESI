@@ -5,6 +5,8 @@ import queue.Queue;
 import java.util.Random;
 
 public class CacheMemory {
+    MESI mesi  = new MESI();
+
     public static int maxBlocks = 10;
     public static int maxValuesPerBlock = 2;
     public static int tagPosition = maxValuesPerBlock;
@@ -28,6 +30,7 @@ public class CacheMemory {
                 values[i][j] = -1;
             }
         }
+
     }
 
     private boolean isBlockStoredInCache(int blockTag) {
@@ -86,14 +89,14 @@ public class CacheMemory {
         return -1;
     }
 
-    private void storeNewBlock(int blockPosition, int[] block) {
+        private void storeNewBlock(int blockPosition, int[] block) {
         queue.add(block[tagPosition]);
         for (int i = 0; i < block.length; i++) {
             values[blockPosition][i] = block[i];
         }
     }
 
-    int[] getBlockFromMemoryPosition(int memoryPosition) {
+    int[] getBlockFromMemoryPosition(int memoryPosition, CPU [] arrayCpu,int posCpu) {
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
@@ -101,9 +104,13 @@ public class CacheMemory {
             System.out.println("Cache Hit!!!");
             block = getBlockWithBlockTag(blockTag);
             hit++;
+            //**
+//            mesi.readHit(values,blockTag,tagPosition);
+
         } else {
             block = ram.getBlockFromMemoryPosition(memoryPosition);
             miss++;
+//            mesi.readMiss(values,blockTag,tagPosition,arrayCpu,posCpu);
             if (!isCacheFull()) {
                 //gets first empty cache position to store the block
                 for (int i = 0; i < values.length; i++) {
@@ -169,5 +176,9 @@ public class CacheMemory {
 
     int getMissCount() {
         return miss;
+    }
+
+    public int[][] getValues() {
+        return values;
     }
 }
