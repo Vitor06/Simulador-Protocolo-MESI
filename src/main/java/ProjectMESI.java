@@ -7,15 +7,13 @@ import java.util.Scanner;
 
 public class ProjectMESI {
     public static void main(String[] args) {
-
+        RAM ram = new RAM();
         Scanner scanner = new Scanner(System.in);
         CPU cpu;
         int  numCpu ;
         int posCpu;
         String input;
         String cmd;
-
-        RAM ram = new RAM();
 
         SubstitionMethods substitionMethod = SubstitionMethods.RANDOM;
         substitionMethod = SubstitionMethods.FIFO;
@@ -48,11 +46,7 @@ public class ProjectMESI {
                 posCpu = scanner.nextInt();
                 posCpu--;
 
-
             }
-
-
-
         }
 
     }
@@ -75,7 +69,8 @@ public class ProjectMESI {
         System.out.println("Digite VR para visualizar os valores atualmente guardados na RAM");
         System.out.println("Digite VC para visualizar os valores atualmente guardados na cache\n" +
                 "e o número de hits e misses no acesso à cache");
-        System.out.println("Digite S para sair do programa");
+        System.out.println("Digite S para realizar uma solicitacao");
+        System.out.println("Digite E para sair do programa");
 
     }
 

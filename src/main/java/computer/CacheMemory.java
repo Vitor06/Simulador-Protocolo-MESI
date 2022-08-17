@@ -96,7 +96,7 @@ public class CacheMemory {
         }
     }
 
-    int[] getBlockFromMemoryPosition(int memoryPosition, CPU [] arrayCpu,int posCpu) {
+    int[] getBlockFromMemoryPosition(int memoryPosition) {
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 

@@ -3,10 +3,11 @@ package computer;
 import java.util.Scanner;
 
 public class CPU {
+    Scanner scanner = new Scanner(System.in);
+    String input ;
+    int data;
     MESI mesi  = new MESI();
     private final RAM ram;
-
-
 
     private final CacheMemory cacheMemory;
     private  int numCpu;
@@ -18,20 +19,28 @@ public class CPU {
         this.numCpu = numCpu;
     }
 
-    public int getValueFromMemoryPosition(int memoryPosition,CPU [] arrayCpu,int posCpu) {
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,arrayCpu,posCpu);
+    public int getValueFromMemoryPosition(int memoryPosition) {
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
         return block[memoryPosition % CacheMemory.maxValuesPerBlock];
     }
 
-    public void updateValueOnMemoryPosition(int newValue, int memoryPosition,CPU [] arrayCpu,int posCpu) {
+    public void updateValueOnMemoryPosition(int newValue, int memoryPosition) {
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition, arrayCpu,posCpu);
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
         int valuePositionInArray =
                 memoryPosition - (CacheMemory.maxValuesPerBlock * blockTag);
         block[valuePositionInArray] = newValue;
         cacheMemory.updateBlock(block, blockTag);
     }
+    //**
+    private int  writeOnMP(int data, RAM ram,CPU [] arrayCpu,int posCpu) {
+        return 0 ;
+    }
 
+    private int  readOnMP(int data, RAM ram,CPU [] arrayCpu,int posCpu) {
+        return  0;
+    }
+    //**
     public void handleCommand(String cmd,CPU [] arrayCpu,int posCpu) {
         Scanner scanner = new Scanner(System.in);
         int chosenMemoryPosition;
@@ -50,7 +59,7 @@ public class CPU {
                 //***
 
                 System.out.println("Valor na posição " + chosenMemoryPosition
-                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition, arrayCpu,posCpu));
+                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition));
                 break;
             case "A":
 
@@ -61,7 +70,7 @@ public class CPU {
 
                 System.out.println("Qual deve ser o novo valor na posição " + chosenMemoryPosition + "?");
                 newValue = scanner.nextInt();
-                updateValueOnMemoryPosition(newValue, chosenMemoryPosition, arrayCpu,posCpu);
+                updateValueOnMemoryPosition(newValue, chosenMemoryPosition);
                 break;
             case "VR":
                 ram.printRam();
@@ -71,13 +80,32 @@ public class CPU {
                 System.out.println("\nHit: " + cacheMemory.getHitCount());
                 System.out.println("Miss: " + cacheMemory.getMissCount());
                 break;
-            case "S":
+            case "E":
                 System.exit(0);
                 break;
+            //**
+            case "S":
+                System.out.println("Digite L para ler um dado da memória principal ");
+                System.out.println("Digite E para alterar um dado da memória principal ");
+                input = scanner.next();
+                System.out.print("Entre com o dado ->");
+                data = scanner.nextInt();
+                if(input.equals("L")){
+
+                    readOnMP(data,ram,arrayCpu,posCpu);
+                }
+                else if(input.equals("E")){
+
+                    writeOnMP(data,ram,arrayCpu,posCpu);
+                }
+                else System.out.println("Valor inválido");
+                //**
             default:
                 System.out.println("\nComando não existente, tente novamente\n");
         }
     }
+
+
 
     public CacheMemory getCacheMemory() {
         return cacheMemory;
