@@ -36,10 +36,12 @@ public class ProjectMESI {
             System.out.println("Processador :" +(cpu.getNumCpu()+1));
             menu();
             input = scanner.next();
-            cpu.handleCommand(input,arrayCpu,posCpu);
+            cpu.handleCommand(input, cpu, arrayCpu,posCpu);
+
 
             System.out.println("Deseja Trocar de processador? Digite Y para sim e N para não");
             cmd = scanner.next();
+
 
             if(cmd.equals("Y")){
                 System.out.print("Qual  processador?\n");
@@ -58,6 +60,7 @@ public class ProjectMESI {
         }
         return arrayCpu;
     }
+
 
 
     public static void menu(){

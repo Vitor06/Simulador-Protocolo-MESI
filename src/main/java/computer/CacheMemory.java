@@ -5,18 +5,21 @@ import queue.Queue;
 import java.util.Random;
 
 public class CacheMemory {
-    MESI mesi  = new MESI();
 
     public static int maxBlocks = 10;
     public static int maxValuesPerBlock = 2;
     public static int tagPosition = maxValuesPerBlock;
     public static int modifiedFlagPosition = maxValuesPerBlock + 1;
+    public static int TagEstatePosition = maxValuesPerBlock + 2;
     private final int[][] values = new int[maxBlocks][maxValuesPerBlock + 3];
     private final SubstitionMethods substitionMethod;
     private final Queue<Integer> queue = new Queue<Integer>(Integer.class, maxBlocks);
     private final RAM ram;
     private int hit = 0;
     private int miss = 0;
+    private boolean isCache;
+    MESI mesi  = new MESI();
+
 
     public CacheMemory(RAM ram, SubstitionMethods substitionMethod) {
         this.ram = ram;
@@ -33,7 +36,7 @@ public class CacheMemory {
 
     }
 
-    private boolean isBlockStoredInCache(int blockTag) {
+    public boolean isBlockStoredInCache(int blockTag) {
         for (int i = 0; i < values.length; i++) {
             if (values[i][tagPosition] == blockTag) {
                 return true;
@@ -96,11 +99,13 @@ public class CacheMemory {
         }
     }
 
-    int[] getBlockFromMemoryPosition(int memoryPosition) {
+    int[] getBlockFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
         if (isBlockStoredInCache(blockTag)) {
+            //MESI
+            mesi.readHit();
             System.out.println("Cache Hit!!!");
             block = getBlockWithBlockTag(blockTag);
             hit++;
@@ -108,9 +113,11 @@ public class CacheMemory {
 //            mesi.readHit(values,blockTag,tagPosition);
 
         } else {
-            block = ram.getBlockFromMemoryPosition(memoryPosition);
+            //MESI
+            //Verificar se está em outras caches
+            isCache =  mesi.readMiss(blockTag,arrayCpu,posCpu,memoryPosition);
+            block = ram.getBlockFromMemoryPosition(memoryPosition,isCache);
             miss++;
-//            mesi.readMiss(values,blockTag,tagPosition,arrayCpu,posCpu);
             if (!isCacheFull()) {
                 //gets first empty cache position to store the block
                 for (int i = 0; i < values.length; i++) {

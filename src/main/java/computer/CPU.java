@@ -3,12 +3,11 @@ package computer;
 import java.util.Scanner;
 
 public class CPU {
-    Scanner scanner = new Scanner(System.in);
+    String typeSolicitation;
     String input ;
     int data;
+    private   RAM ram ;
     MESI mesi  = new MESI();
-    private final RAM ram;
-
     private final CacheMemory cacheMemory;
     private  int numCpu;
 
@@ -19,29 +18,31 @@ public class CPU {
         this.numCpu = numCpu;
     }
 
-    public int getValueFromMemoryPosition(int memoryPosition) {
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
+    public int getValueFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, posCpu);
         return block[memoryPosition % CacheMemory.maxValuesPerBlock];
     }
 
-    public void updateValueOnMemoryPosition(int newValue, int memoryPosition) {
+    public void updateValueOnMemoryPosition(int newValue, int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition);
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, posCpu);
         int valuePositionInArray =
                 memoryPosition - (CacheMemory.maxValuesPerBlock * blockTag);
         block[valuePositionInArray] = newValue;
         cacheMemory.updateBlock(block, blockTag);
     }
-    //**
-    private int  writeOnMP(int data, RAM ram,CPU [] arrayCpu,int posCpu) {
-        return 0 ;
+    /*
+    private void  writeOnMP(int data,CPU [] arrayCpu,int posCpu) {
+            typeSolicitation = "W";
+            mesi.execute(typeSolicitation,arrayCpu,posCpu,data,ram);
     }
 
-    private int  readOnMP(int data, RAM ram,CPU [] arrayCpu,int posCpu) {
-        return  0;
+    private void   readOnMP(int data,CPU [] arrayCpu,int posCpu) {
+            typeSolicitation = "R";
+            mesi.execute(typeSolicitation,arrayCpu,posCpu,data,ram);
     }
-    //**
-    public void handleCommand(String cmd,CPU [] arrayCpu,int posCpu) {
+    */
+    public void handleCommand(String cmd,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
         Scanner scanner = new Scanner(System.in);
         int chosenMemoryPosition;
         int newValue;
@@ -59,7 +60,7 @@ public class CPU {
                 //***
 
                 System.out.println("Valor na posição " + chosenMemoryPosition
-                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition));
+                        + ": " + getValueFromMemoryPosition(chosenMemoryPosition,cpuRequester, arrayCpu, posCpu));
                 break;
             case "A":
 
@@ -70,7 +71,7 @@ public class CPU {
 
                 System.out.println("Qual deve ser o novo valor na posição " + chosenMemoryPosition + "?");
                 newValue = scanner.nextInt();
-                updateValueOnMemoryPosition(newValue, chosenMemoryPosition);
+                updateValueOnMemoryPosition(newValue, chosenMemoryPosition,cpuRequester, arrayCpu, posCpu);
                 break;
             case "VR":
                 ram.printRam();
@@ -84,27 +85,28 @@ public class CPU {
                 System.exit(0);
                 break;
             //**
+            /*
             case "S":
                 System.out.println("Digite L para ler um dado da memória principal ");
                 System.out.println("Digite E para alterar um dado da memória principal ");
                 input = scanner.next();
-                System.out.print("Entre com o dado ->");
+                System.out.println("Entre com o dado ->");
                 data = scanner.nextInt();
                 if(input.equals("L")){
 
-                    readOnMP(data,ram,arrayCpu,posCpu);
+                    readOnMP(data,arrayCpu,posCpu);
                 }
                 else if(input.equals("E")){
 
-                    writeOnMP(data,ram,arrayCpu,posCpu);
+                    writeOnMP(data,arrayCpu,posCpu);
                 }
                 else System.out.println("Valor inválido");
-                //**
+                break;
+                */
             default:
                 System.out.println("\nComando não existente, tente novamente\n");
         }
     }
-
 
 
     public CacheMemory getCacheMemory() {

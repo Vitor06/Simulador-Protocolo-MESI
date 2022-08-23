@@ -17,13 +17,17 @@ public class RAM {
         }
     }
     //leitura
-    int[] getBlockFromMemoryPosition(int memoryPosition) {
-        int[] block = new int[CacheMemory.maxValuesPerBlock + 2];
+    int[] getBlockFromMemoryPosition(int memoryPosition,boolean isCache) {
+        int[] block = new int[CacheMemory.maxValuesPerBlock + 3];
         int blockTag = getBlockTagFromMemoryPosition(memoryPosition);
+
 
         for (int i = 0; i < CacheMemory.maxValuesPerBlock; i++) {
             block[i] = values[(blockTag * CacheMemory.maxValuesPerBlock) + i];
         }
+        if(isCache)block[CacheMemory.TagEstatePosition] =2;//S
+        else block[CacheMemory.TagEstatePosition] =1;//E
+
         block[CacheMemory.tagPosition] = blockTag;
         block[CacheMemory.modifiedFlagPosition] = 0;
 
