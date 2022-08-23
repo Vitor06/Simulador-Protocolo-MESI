@@ -62,7 +62,7 @@ public class CPU {
                 System.out.println("Valor na posição " + chosenMemoryPosition
                         + ": " + getValueFromMemoryPosition(chosenMemoryPosition,cpuRequester, arrayCpu, posCpu));
                 break;
-            case "A":
+            case "W":
 
                 System.out.println("Qual posição você deseja atualizar?");
                 chosenMemoryPosition = scanner.nextInt();

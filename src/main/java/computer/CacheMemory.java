@@ -105,13 +105,10 @@ public class CacheMemory {
 
         if (isBlockStoredInCache(blockTag)) {
             //MESI
-            mesi.readHit();
             System.out.println("Cache Hit!!!");
+            mesi.readHit();
             block = getBlockWithBlockTag(blockTag);
             hit++;
-            //**
-//            mesi.readHit(values,blockTag,tagPosition);
-
         } else {
             //MESI
             //Verificar se está em outras caches

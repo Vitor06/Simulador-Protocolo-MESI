@@ -67,12 +67,11 @@ public class ProjectMESI {
         System.out.println("\n-------------------------");
         System.out.println("Qual comando a CPU deve executar?\n");
         System.out.println("Comandos disponíveis:");
-        System.out.println("Digite R para resgatar um valor em determinada posição da RAM");
-        System.out.println("Digite A para atualizar um valor em determinada posição da RAM");
+        System.out.println("Digite R para Solicitar uma leitura");
+        System.out.println("Digite W para Solicitar uma escrita");
         System.out.println("Digite VR para visualizar os valores atualmente guardados na RAM");
         System.out.println("Digite VC para visualizar os valores atualmente guardados na cache\n" +
                 "e o número de hits e misses no acesso à cache");
-        System.out.println("Digite S para realizar uma solicitacao");
         System.out.println("Digite E para sair do programa");
 
     }

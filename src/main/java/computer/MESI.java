@@ -20,7 +20,6 @@ public class MESI {
         ArrayList<Boolean>isInCache = new ArrayList<>() ;
         for (CPU cpu: arrayCpu){
             isValue = findDataInCache(cpu.getCacheMemory(), posCpu, memoryPosition, blockTag);
-
             if(isValue==true) {
                 numCpu = cpu.getNumCpu();
                 chageEstate(arrayCpu,numCpu,blockTag);
@@ -57,6 +56,7 @@ public class MESI {
     public boolean readMiss(int blockTag,CPU [] arrayCpu,int posCpu,int memoryPosition) {
         /*0 ->M , 1 ->E ,2->S, 3->I*/
         //Procurar nas outras caches
+        System.out.println("Read Miss");
         ArrayList<Boolean>isInCacheAux = new ArrayList<>();
         isInCacheAux = findOnothercaches(arrayCpu,posCpu,memoryPosition,blockTag);
         if(isInCacheAux.contains(true)){
@@ -65,7 +65,6 @@ public class MESI {
         else{
             return false;
         }
-
     }
 
     public void writeMiss(int[][] values, int blockTag, int tagPosition, CacheMemory arrayCache) {
