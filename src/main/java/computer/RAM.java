@@ -25,8 +25,7 @@ public class RAM {
         for (int i = 0; i < CacheMemory.maxValuesPerBlock; i++) {
             block[i] = values[(blockTag * CacheMemory.maxValuesPerBlock) + i];
         }
-        if(isCache)block[CacheMemory.TagEstatePosition] =2;//S
-        else block[CacheMemory.TagEstatePosition] =1;//E
+
 
         block[CacheMemory.tagPosition] = blockTag;
         block[CacheMemory.modifiedFlagPosition] = 0;

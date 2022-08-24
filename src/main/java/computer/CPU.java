@@ -19,17 +19,17 @@ public class CPU {
     }
 
     public int getValueFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, posCpu);
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, "R");
         return block[memoryPosition % CacheMemory.maxValuesPerBlock];
     }
 
     public void updateValueOnMemoryPosition(int newValue, int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
-        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, posCpu);
+        int[] block = cacheMemory.getBlockFromMemoryPosition(memoryPosition,cpuRequester, arrayCpu, "W");
         int valuePositionInArray =
                 memoryPosition - (CacheMemory.maxValuesPerBlock * blockTag);
         block[valuePositionInArray] = newValue;
-        cacheMemory.updateBlock(block, blockTag);
+        cacheMemory.updateBlock(block, blockTag, cpuRequester, arrayCpu, posCpu);
     }
     /*
     private void  writeOnMP(int data,CPU [] arrayCpu,int posCpu) {

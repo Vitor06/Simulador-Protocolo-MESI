@@ -15,28 +15,38 @@ public class MESI {
     int k = 0;
     boolean isValue;
     int numCpu;
+    /*RH,RM - OK , */
+    private ArrayList<Integer> findOnotherCaches(CPU[] arrayCpu, int blockTag, CPU cpuRequester, int type) {
+        ArrayList<Integer> arrayNumCpu = new ArrayList<Integer>();
 
-    private ArrayList<Boolean> findOnothercaches(CPU[] arrayCpu, int posCpu, int memoryPosition, int blockTag) {
-        ArrayList<Boolean>isInCache = new ArrayList<>() ;
+        boolean valueIsInCache = false;
         for (CPU cpu: arrayCpu){
-            isValue = findDataInCache(cpu.getCacheMemory(), posCpu, memoryPosition, blockTag);
-            if(isValue==true) {
-                numCpu = cpu.getNumCpu();
-                chageEstate(arrayCpu,numCpu,blockTag);
+            if(cpu.getNumCpu()!=cpuRequester.getNumCpu()) {
+                valueIsInCache = findDataInCache(cpu.getCacheMemory(), blockTag);
+                if (valueIsInCache == true) {
+                    arrayNumCpu.add( cpu.getNumCpu());
+                }
             }
-            isInCache.add(isValue);
         }
-        return isInCache;
+        return arrayNumCpu;
     }
 
-    private void chageEstate(CPU[] arrayCpu,int numCpu,int blockTag) {
-        int[][] valuesCache = arrayCpu[numCpu].getCacheMemory().getValues();
-        i = findLineInCacheMemory(valuesCache,blockTag);
-        valuesCache[i][tagEstate] = 2;
-
+    private void chageEstateCacheMemory(CPU[] arrayCpu,ArrayList<Integer> arrayNumCpu,int blockTag,int type) {
+        for (CPU cpu: arrayCpu){
+            if(arrayNumCpu.contains( cpu.getNumCpu())){
+                int[][] valuesCache = cpu.getCacheMemory().getValues();
+                i = findLineInCacheMemory(valuesCache,blockTag);
+                if(type==0){
+                    valuesCache[i][tagEstate] = 2;
+                }
+                else if(type==1){
+                    valuesCache[i][tagEstate] = 3   ;
+                }
+            }
+        }
     }
 
-    private boolean  findDataInCache(CacheMemory cache, int posCpu, int data, int blockTag) {
+    private boolean  findDataInCache(CacheMemory cache, int blockTag) {
         return cache.isBlockStoredInCache(blockTag);
     }
     public int findLineInCacheMemory(int[][] values, int blockTag) {
@@ -53,47 +63,52 @@ public class MESI {
 
     }
 
-    public boolean readMiss(int blockTag,CPU [] arrayCpu,int posCpu,int memoryPosition) {
+    public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester) {
         /*0 ->M , 1 ->E ,2->S, 3->I*/
         //Procurar nas outras caches
-        System.out.println("Read Miss");
-        ArrayList<Boolean>isInCacheAux = new ArrayList<>();
-        isInCacheAux = findOnothercaches(arrayCpu,posCpu,memoryPosition,blockTag);
-        if(isInCacheAux.contains(true)){
-           return true;
+        int type = 0;//RM
+        ArrayList<Integer> arrayNumCpu;
+        arrayNumCpu = findOnotherCaches(arrayCpu, blockTag, cpuRequester, type);
+        if(arrayNumCpu.size()>0){
+             i = findLineInCacheMemory(cpuRequester.getCacheMemory().getValues(),blockTag);
+             cpuRequester.getCacheMemory().getValues()[i][tagEstate] = 2;
+             chageEstateCacheMemory(arrayCpu, arrayNumCpu, blockTag,type);
         }
         else{
-            return false;
+            cpuRequester.getCacheMemory().getValues()[i][tagEstate] = 1;
         }
     }
 
-    public void writeMiss(int[][] values, int blockTag, int tagPosition, CacheMemory arrayCache) {
+
+    public void writeMiss(int blockTag, CPU[] arrayCpu, CPU cpuRequester) {
+        int type = 1;//WM
+        int cache[][] = cpuRequester.getCacheMemory().getValues();
+        ArrayList<Integer> arrayNumCpu;
+        i = findLineInCacheMemory(cache, blockTag);
+        cache[i][tagEstate] = 0;
+        arrayNumCpu = findOnotherCaches(arrayCpu, blockTag, cpuRequester, type);
+        chageEstateCacheMemory(arrayCpu, arrayNumCpu, blockTag,type);
+
 
     }
-
-    public void writeHit(int[][] values, int blockTag, int tagPosition,CacheMemory arrayCache) {
-
-    }
-    /*
-    public void execute(String typeSolicitation, CPU[] arrayCpu, int posCpu,int data,RAM ram) {
-        int blockTag = ram.getBlockTagFromMemoryPosition(data);
-        CPU cpuRequester = arrayCpu[posCpu];
-        if(typeSolicitation=="R"){
-            if(dataIsIncache(data,cpuRequester,blockTag)){
-                readHit();
-            }
-            else{
-
-                readMiss(arrayCpu,posCpu, data,blockTag);
-                cpuRequester.getCacheMemory().printCache();
-            }
+    public void writeHit(int blockTag, CPU[] arrayCpu, CPU cpuRequester) {
+        int type = 2;//WH
+        int cache[][] = cpuRequester.getCacheMemory().getValues();
+        ArrayList<Integer> arrayNumCpu;
+        arrayNumCpu = findOnotherCaches(arrayCpu, blockTag, cpuRequester, type);
+        if(arrayNumCpu.size()>0){
+            i = findLineInCacheMemory(cache, blockTag);
+            cache[i][tagEstate] = 0;
+            type = 1;
+            chageEstateCacheMemory(arrayCpu, arrayNumCpu, blockTag,type);
         }
-        else if(typeSolicitation=="W"){
-
+        else {
+            i = findLineInCacheMemory(cache, blockTag);
+            cache[i][tagEstate] = 0;
+            type = 1;
         }
-    }
 
-     */
+    }
 
     private boolean dataIsIncache(int data, CPU cpuRequester,int blockTag) {
         CacheMemory cpuRequesterCacheMemory = cpuRequester.getCacheMemory();
@@ -102,11 +117,13 @@ public class MESI {
 
         //calcular a tag do bloco
 
+//    }
+//    private void printArray(ArrayList<Boolean> array){
+//        for (int i =0;i<array.size();i++){
+//            System.out.println(array.get(i));
+//
+//        }
     }
-    private void printArray(ArrayList<Boolean> array){
-        for (int i =0;i<array.size();i++){
-            System.out.println(array.get(i));
 
-        }
-    }
+
 }

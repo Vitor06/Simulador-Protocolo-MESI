@@ -99,20 +99,20 @@ public class CacheMemory {
         }
     }
 
-    int[] getBlockFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
+    int[] getBlockFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,String type) {
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
         if (isBlockStoredInCache(blockTag)) {
             //MESI
             System.out.println("Cache Hit!!!");
-            mesi.readHit();
+            if(type.equals("R"))mesi.readHit();
             block = getBlockWithBlockTag(blockTag);
             hit++;
         } else {
             //MESI
             //Verificar se está em outras caches
-            isCache =  mesi.readMiss(blockTag,arrayCpu,posCpu,memoryPosition);
+
             block = ram.getBlockFromMemoryPosition(memoryPosition,isCache);
             miss++;
             if (!isCacheFull()) {
@@ -129,17 +129,21 @@ public class CacheMemory {
                 removeBlockOnPosition(nextPositionToUse);
                 storeNewBlock(nextPositionToUse, block);
             }
+            if(type.equals("R")) mesi.readMiss(blockTag,arrayCpu,cpuRequester);
         }
         return block;
     }
 
-    void updateBlock(int[] newBlock, int blockTag) {
+    void updateBlock(int[] newBlock, int blockTag,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
         newBlock[modifiedFlagPosition] = 1;
         if (isBlockStoredInCache(blockTag)) {
+
             int blockPos = getBlockPosWithBlockTag(blockTag);
             values[blockPos] = newBlock;
+            mesi.writeHit(blockTag,arrayCpu, cpuRequester);
         } else {
             if (!isCacheFull()) {
+
                 //gets first empty cache position to store the block
                 for (int i = 0; i < values.length; i++) {
                     if (values[i][0] == -1) {
@@ -153,7 +157,9 @@ public class CacheMemory {
                 removeBlockOnPosition(nextPositionToUse);
                 storeNewBlock(nextPositionToUse, newBlock);
             }
+
         }
+        mesi.writeMiss(blockTag, arrayCpu,  cpuRequester);
     }
 
     private void removeBlockOnPosition(int blockPosition) {
