@@ -92,7 +92,7 @@ public class CacheMemory {
         return -1;
     }
 
-        private void storeNewBlock(int blockPosition, int[] block) {
+        public void storeNewBlock(int blockPosition, int[] block) {
         queue.add(block[tagPosition]);
         for (int i = 0; i < block.length; i++) {
             values[blockPosition][i] = block[i];
@@ -113,7 +113,7 @@ public class CacheMemory {
             //MESI
             //Verificar se está em outras caches
 
-            block = ram.getBlockFromMemoryPosition(memoryPosition,isCache);
+            block = ram.getBlockFromMemoryPosition(memoryPosition);
             miss++;
             if (!isCacheFull()) {
                 //gets first empty cache position to store the block
@@ -134,13 +134,14 @@ public class CacheMemory {
         return block;
     }
 
-    void updateBlock(int[] newBlock, int blockTag,CPU cpuRequester,CPU [] arrayCpu,int posCpu) {
+    void updateBlock(int[] newBlock, int blockTag,CPU cpuRequester,CPU [] arrayCpu,int posCpu,int memoryPosition) {
         newBlock[modifiedFlagPosition] = 1;
         if (isBlockStoredInCache(blockTag)) {
 
             int blockPos = getBlockPosWithBlockTag(blockTag);
             values[blockPos] = newBlock;
-            mesi.writeHit(blockTag,arrayCpu, cpuRequester);
+            mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,newBlock,memoryPosition);
+
         } else {
             if (!isCacheFull()) {
 
@@ -156,10 +157,14 @@ public class CacheMemory {
                 int nextPositionToUse = getNextPositionToUse();
                 removeBlockOnPosition(nextPositionToUse);
                 storeNewBlock(nextPositionToUse, newBlock);
+
             }
 
+
+
+
         }
-        mesi.writeMiss(blockTag, arrayCpu,  cpuRequester);
+
     }
 
     private void removeBlockOnPosition(int blockPosition) {

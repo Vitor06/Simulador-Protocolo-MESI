@@ -17,7 +17,7 @@ public class RAM {
         }
     }
     //leitura
-    int[] getBlockFromMemoryPosition(int memoryPosition,boolean isCache) {
+    int[] getBlockFromMemoryPosition(int memoryPosition) {
         int[] block = new int[CacheMemory.maxValuesPerBlock + 3];
         int blockTag = getBlockTagFromMemoryPosition(memoryPosition);
 
@@ -37,7 +37,7 @@ public class RAM {
         return Math.floorDiv(memoryPosition, CacheMemory.maxValuesPerBlock);
     }
     //escrita
-    void updateMemoryBlock(int[] newBlock, int blockTag) {
+    public void updateMemoryBlock(int[] newBlock, int blockTag) {
         for(int i = 0; i < CacheMemory.maxValuesPerBlock; i++){
             values[blockTag * CacheMemory.maxValuesPerBlock + i] = newBlock[i];
         }
