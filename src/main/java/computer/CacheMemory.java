@@ -101,7 +101,6 @@ public class CacheMemory {
     }
 
     int[] getBlockFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,String type) {
-        System.out.println(type);
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
@@ -132,7 +131,7 @@ public class CacheMemory {
                 removeBlockOnPosition(nextPositionToUse);
                 storeNewBlock(nextPositionToUse, block);
             }
-            if(type.equals("R")) mesi.readMiss(blockTag,arrayCpu,cpuRequester);
+            if(type.equals("R")) mesi.readMiss(blockTag,arrayCpu,cpuRequester,ram);
             else if(type.equals("W"))  mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,block,memoryPosition);;
         }
         return block;

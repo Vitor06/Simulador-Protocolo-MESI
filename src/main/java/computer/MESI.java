@@ -108,7 +108,7 @@ public class MESI {
 
     }
 
-    public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester) {
+    public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester,RAM ram) {
         int i;
         System.out.println("READ MISS");
         /*0 ->M , 1 ->E ,2->S, 3->I*/
@@ -139,6 +139,8 @@ public class MESI {
 
             i = getLineInCacheMemory(cahecpuRequester.getValues(),blockTag);
             cahecpuRequester.getValues()[i][tagEstate] = 2;
+
+            ram.updateMemoryBlock(blockModify,blockTag);
         }
         else{
             i = getLineInCacheMemory(cpuRequester.getCacheMemory().getValues(),blockTag);
