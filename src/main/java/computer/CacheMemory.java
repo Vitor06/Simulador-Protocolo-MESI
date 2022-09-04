@@ -2,6 +2,7 @@ package computer;
 
 import queue.Queue;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Random;
 
 public class CacheMemory {
@@ -100,15 +101,17 @@ public class CacheMemory {
     }
 
     int[] getBlockFromMemoryPosition(int memoryPosition,CPU cpuRequester,CPU [] arrayCpu,String type) {
+        System.out.println(type);
         int[] block = {};
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
         if (isBlockStoredInCache(blockTag)) {
             //MESI
-            System.out.println("Cache Hit!!!");
-            if(type.equals("R"))mesi.readHit();
+//            System.out.println("Cache Hit!!!");
             block = getBlockWithBlockTag(blockTag);
             hit++;
+            if(type.equals("R"))mesi.readHit();
+            else if(type.equals("W"))mesi.writeHit(blockTag,arrayCpu,cpuRequester);
         } else {
             //MESI
             //Verificar se está em outras caches
@@ -130,17 +133,18 @@ public class CacheMemory {
                 storeNewBlock(nextPositionToUse, block);
             }
             if(type.equals("R")) mesi.readMiss(blockTag,arrayCpu,cpuRequester);
+            else if(type.equals("W"))  mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,block,memoryPosition);;
         }
         return block;
     }
 
     void updateBlock(int[] newBlock, int blockTag,CPU cpuRequester,CPU [] arrayCpu,int posCpu,int memoryPosition) {
+
         newBlock[modifiedFlagPosition] = 1;
         if (isBlockStoredInCache(blockTag)) {
-
             int blockPos = getBlockPosWithBlockTag(blockTag);
             values[blockPos] = newBlock;
-            mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,newBlock,memoryPosition);
+//            mesi.writeHit(blockTag,arrayCpu,cpuRequester);
 
         } else {
             if (!isCacheFull()) {
@@ -159,6 +163,8 @@ public class CacheMemory {
                 storeNewBlock(nextPositionToUse, newBlock);
 
             }
+
+
 
 
 
