@@ -162,12 +162,12 @@ public class MESI {
         cache[i][tagEstate] = 0;
         arrayNumCpu = findInOtherCache(arrayCpu, blockTag, cpuRequester, type);
         arrayEstate = getEstate(arrayCpu,arrayNumCpu,blockTag);
-
+        for(int k: arrayEstate) System.out.println(k);
         //1 - FALSE
 
 
 
-        if(arrayEstate.contains(2) && !arrayEstate.contains(0)){
+        if(arrayEstate.size()>0 && arrayEstate.contains(0)!=true){
             invalidateLineInCaches(arrayNumCpu,blockTag,arrayCpu);
         }
 
@@ -189,6 +189,7 @@ public class MESI {
 
             i = getLineInCacheMemory(cahecpuRequester.getValues(),blockTag);
             cahecpuRequester.getValues()[i][tagEstate] = 0;
+
         }
 
     }
