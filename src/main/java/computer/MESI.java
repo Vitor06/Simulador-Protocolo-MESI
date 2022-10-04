@@ -8,19 +8,9 @@ public class MESI {
     public static int maxValuesPerBlock = 2;
     public static int tagPosition = maxValuesPerBlock;
     public static int tagEstate= tagPosition + 2;
-    int tagMesi;
-    String typeSolicitation;
-    int [] valuesRam;
-    CPU [] arrayCpu;
-    int posCpu;
-
-    int k = 0;
-    boolean isValue;
-    int numCpu;
     /*RH,RM - OK , */
     private ArrayList<Integer> findInOtherCache(CPU[] arrayCpu, int blockTag, CPU cpuRequester, int type) {
         ArrayList<Integer> arrayNumCpu = new ArrayList<Integer>();
-
 
         boolean valueIsInCache = false;
         for (CPU cpu: arrayCpu){
@@ -47,7 +37,6 @@ public class MESI {
                 arrayEstate.add(cache[i][tagEstate]) ;
             }
             return  arrayEstate;
-
     }
 
     private void chageEstateCacheMemory(CPU[] arrayCpu,ArrayList<Integer> arrayNumCpu,int blockTag,int type) {
@@ -86,11 +75,7 @@ public class MESI {
         i = getLineInCacheMemory(cache,blockTag);
         for(int j=0;j<cache[i].length;j++){
             cache[i][j] = blockModify[j];
-
         }
-
-
-
     }
 
     private int getIndex(ArrayList<Integer> arrayEstate,int e) {
@@ -105,7 +90,6 @@ public class MESI {
     public void readHit() {
             //Mantém estado
             System.out.println("Read Hit");
-
     }
 
     public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester,RAM ram) {
@@ -118,6 +102,7 @@ public class MESI {
         ArrayList<Integer> arrayEstate;
         arrayNumCpu = findInOtherCache(arrayCpu, blockTag, cpuRequester, type);
         arrayEstate = getEstate(arrayCpu,arrayNumCpu,blockTag);
+
         if(arrayNumCpu.size()>0 &&  !arrayEstate.contains(0)){
 
              i = getLineInCacheMemory(cpuRequester.getCacheMemory().getValues(),blockTag);
@@ -139,7 +124,6 @@ public class MESI {
 
             i = getLineInCacheMemory(cahecpuRequester.getValues(),blockTag);
             cahecpuRequester.getValues()[i][tagEstate] = 2;
-
             ram.updateMemoryBlock(blockModify,blockTag);
         }
         else{
@@ -147,8 +131,6 @@ public class MESI {
             cpuRequester.getCacheMemory().getValues()[i][tagEstate] = 1;
         }
     }
-
-
 
     public void writeMiss(int blockTag, CPU[] arrayCpu, CPU cpuRequester,RAM ram,int [] newBlock,int memoryPosition) {
         int i;
@@ -162,15 +144,10 @@ public class MESI {
         cache[i][tagEstate] = 0;
         arrayNumCpu = findInOtherCache(arrayCpu, blockTag, cpuRequester, type);
         arrayEstate = getEstate(arrayCpu,arrayNumCpu,blockTag);
-        for(int k: arrayEstate) System.out.println(k);
-        //1 - FALSE
-
-
 
         if(arrayEstate.size()>0 && arrayEstate.contains(0)!=true){
             invalidateLineInCaches(arrayNumCpu,blockTag,arrayCpu);
         }
-
 
         else if(arrayNumCpu.size()>0 && arrayEstate.contains(0)==true){
             CacheMemory cahecpuRequester  = cpuRequester.getCacheMemory();
@@ -182,16 +159,12 @@ public class MESI {
             ram.updateMemoryBlock(blockModify,blockTag);
             cpuWithModifyValue.getCacheMemory().getValues()[i][tagEstate]=3;
 
-
             //passar para ivalido
             int [] block = ram.getBlockFromMemoryPosition(memoryPosition);
             chageValuesOfblock(cpuRequester,blockTag,newBlock);
-
             i = getLineInCacheMemory(cahecpuRequester.getValues(),blockTag);
             cahecpuRequester.getValues()[i][tagEstate] = 0;
-
         }
-
     }
 
     private void invalidateLineInCaches(ArrayList<Integer> arrayNumCpu, int blockTag, CPU[] arrayCpu) {
@@ -200,11 +173,8 @@ public class MESI {
             int [][] cache = arrayCpu[i].getCacheMemory().getValues();
             j = getLineInCacheMemory(cache,blockTag);
             if(cache[j][tagEstate]==1 || cache[j][tagEstate]==2 ){
-
                cache[j][tagEstate]=3;
-
             }
-
         }
     }
 
@@ -218,26 +188,18 @@ public class MESI {
         arrayNumCpu = findInOtherCache(arrayCpu, blockTag, cpuRequester,type);
         arrayEstate = getEstate(arrayCpu,arrayNumCpu,blockTag);
 
-
-
         if(arrayNumCpu.size()>0){
-            //2 ,3, 5
-
             arrayNumCpuShare = getCpu(arrayEstate,arrayNumCpu);
              i = getLineInCacheMemory(cpuRequester.getCacheMemory().getValues(),blockTag);
-
             cpuRequester.getCacheMemory().getValues()[i][tagEstate]=0;
-
             invalidateLineInCaches(arrayNumCpuShare,blockTag,arrayCpu);
 
         }
-
          else {
              i = getLineInCacheMemory(cpuRequester.getCacheMemory().getValues(),blockTag);
             cpuRequester.getCacheMemory().getValues()[i][tagEstate]=0;
         }
     }
-
     private ArrayList<Integer> getCpu(ArrayList<Integer> arrayEstate, ArrayList<Integer> arrayNumCpu) {
         ArrayList<Integer> arrayCpuShare = new ArrayList<Integer>();
         int j;
@@ -247,25 +209,8 @@ public class MESI {
                 arrayCpuShare.add(arrayNumCpu.get(i));
             }
 
-
         }
         return arrayCpuShare;
-    }
-
-
-    private boolean dataIsIncache(int data, CPU cpuRequester,int blockTag) {
-        CacheMemory cpuRequesterCacheMemory = cpuRequester.getCacheMemory();
-
-        return cpuRequesterCacheMemory.isBlockStoredInCache(blockTag);
-
-        //calcular a tag do bloco
-
-//    }
-//    private void printArray(ArrayList<Boolean> array){
-//        for (int i =0;i<array.size();i++){
-//            System.out.println(array.get(i));
-//
-//        }
     }
 
 
