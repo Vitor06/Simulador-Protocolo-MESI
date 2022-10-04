@@ -24,7 +24,7 @@ public class ProjectMESI {
         CPU [] arrayCpu = new CPU[numCpu];
         arrayCpu = storeCpu(numCpu,arrayCpuAux,substitionMethod,ram);
 
-        System.out.print("Qual  processador?\n");
+        System.out.print("Qual processador?\n");
         System.out.print("Digite 1 para o processador 1, 2 para o processador 2 ,...?\n");
 
         posCpu = scanner.nextInt();
@@ -33,7 +33,7 @@ public class ProjectMESI {
         while(true){
 
             cpu = arrayCpu[posCpu];
-            System.out.println("Processador :" +(cpu.getNumCpu()+1));
+            System.out.println("Processador : " +(cpu.getNumCpu()+1));
             menu();
             input = scanner.next();
             cpu.handleCommand(input, cpu, arrayCpu,posCpu);
