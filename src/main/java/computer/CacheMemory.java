@@ -163,11 +163,6 @@ public class CacheMemory {
 
             }
 
-
-
-
-
-
         }
 
     }
@@ -179,11 +174,15 @@ public class CacheMemory {
     }
 
     void printCache() {
+        /*0 ->M , 1 ->E ,2->S, 3->I*/
+        System.out.println("M(Modificado)->0 | E(Exclusivo)->1 | S(compartilhado)->2 | I(invalido)->3");
         System.out.println("----------Cache----------");
-        System.out.println("V1 | V2 | TAG | MOD |TAG MESI");
+        System.out.println("V1 | V2 | TAG |TAG MESI");
         for (int[] i : values) {
+            int k = 0;
             for (int j : i) {
-                System.out.print(j + " ");
+                if(k!=3) { System.out.print(j + " ");}
+                k++;
             }
             System.out.println();
         }
