@@ -85,13 +85,17 @@ public class MESI {
     }
 
     public void readHit() {
-            //Mantém estado
-            System.out.println("Read Hit");
+        System.out.println("---------------");
+        System.out.println("\nREAD HIT\n");
+        System.out.println("---------------");
     }
 
     public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester,RAM ram) {
         int i;
-        System.out.println("READ MISS");
+        System.out.println("---------------");
+        System.out.println("\nREAD MIS\n");
+        System.out.println("---------------");
+
         int type = 0;//RM
         int [][] cahecpuRequesterCacheMemory  = cpuRequester.getCacheMemory().getValues();
         ArrayList<Integer> arrayNumCpu;
@@ -129,7 +133,10 @@ public class MESI {
 
     public void writeMiss(int blockTag, CPU[] arrayCpu, CPU cpuRequester,RAM ram,int [] newBlock,int memoryPosition) {
         int i;
-        System.out.println("WRITE MISS");
+        System.out.println("---------------");
+        System.out.println("\nWRITE MISS\n");
+        System.out.println("---------------");
+
         int type = 1;//WM
         int [][] cpuRequesterCacheMemory  = cpuRequester.getCacheMemory().getValues();
         ArrayList<Integer> arrayNumCpu;
@@ -173,7 +180,10 @@ public class MESI {
     }
 
     public void writeHit(int blockTag, CPU[] arrayCpu, CPU cpuRequester) {
-        System.out.println("WRITE HIT");
+        System.out.println("---------------");
+        System.out.println("\nWRITE HIT\n");
+        System.out.println("---------------");
+
         int i;
         int type =0;
         int [][] cpuRequesterCacheMemory  = cpuRequester.getCacheMemory().getValues();

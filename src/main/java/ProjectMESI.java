@@ -33,13 +33,13 @@ public class ProjectMESI {
         while(true){
 
             cpu = arrayCpu[posCpu];
-            System.out.println("Processador : " +(cpu.getNumCpu()+1));
+            System.out.println("\nProcessador : " +(cpu.getNumCpu()+1) );
             menu();
             input = scanner.next();
             cpu.handleCommand(input, cpu, arrayCpu,posCpu);
 
 
-            System.out.println("Deseja Trocar de processador? Digite Y para sim e N para não");
+            System.out.println("Deseja Trocar de processador? Digite Y para sim e N para nao");
             cmd = scanner.next();
 
 
@@ -47,6 +47,7 @@ public class ProjectMESI {
                 System.out.print("Qual  processador?\n");
                 posCpu = scanner.nextInt();
                 posCpu--;
+
 
             }
         }
@@ -66,12 +67,12 @@ public class ProjectMESI {
     public static void menu(){
         System.out.println("\n-------------------------");
         System.out.println("Qual comando a CPU deve executar?\n");
-        System.out.println("Comandos disponíveis:");
+        System.out.println("Comandos disponiveis:");
         System.out.println("Digite R para Solicitar uma leitura");
         System.out.println("Digite W para Solicitar uma escrita");
         System.out.println("Digite VR para visualizar os valores atualmente guardados na RAM");
         System.out.println("Digite VC para visualizar os valores atualmente guardados na cache\n" +
-                "e o número de hits e misses no acesso à cache");
+                "e o numero de hits e misses no acesso a cache");
         System.out.println("Digite E para sair do programa");
 
     }
