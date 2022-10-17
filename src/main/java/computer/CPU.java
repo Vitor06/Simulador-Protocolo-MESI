@@ -49,7 +49,6 @@ public class CPU {
                             " (ultima posicao disponivel é a " + (RAM.ramLength-1) + ")");
                     break;
                 }
-                //***
 
                 System.out.println("Valor na posicao " + chosenMemoryPosition
                         + ": " + getValueFromMemoryPosition(chosenMemoryPosition,cpuRequester, arrayCpu, posCpu));
@@ -58,8 +57,6 @@ public class CPU {
 
                 System.out.println("Qual posicao voce deseja atualizar?");
                 chosenMemoryPosition = scanner.nextInt();
-                //***
-
 
                 System.out.println("Qual deve ser o novo valor na posicao " + chosenMemoryPosition + "?");
                 newValue = scanner.nextInt();

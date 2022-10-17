@@ -93,7 +93,7 @@ public class MESI {
     public void  readMiss(int blockTag,CPU [] arrayCpu,CPU cpuRequester,RAM ram) {
         int i;
         System.out.println("---------------");
-        System.out.println("\nREAD MIS\n");
+        System.out.println("READ MISS ");
         System.out.println("---------------");
 
         int type = 0;//RM

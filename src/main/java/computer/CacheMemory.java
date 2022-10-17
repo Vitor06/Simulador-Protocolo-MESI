@@ -105,15 +105,11 @@ public class CacheMemory {
         int blockTag = ram.getBlockTagFromMemoryPosition(memoryPosition);
 
         if (isBlockStoredInCache(blockTag)) {
-            //MESI
-//            System.out.println("Cache Hit!!!");
             block = getBlockWithBlockTag(blockTag);
             hit++;
             if(type.equals("R"))mesi.readHit();
             else if(type.equals("W"))mesi.writeHit(blockTag,arrayCpu,cpuRequester);
         } else {
-            //MESI
-            //Verificar se está em outras caches
 
             block = ram.getBlockFromMemoryPosition(memoryPosition);
             miss++;
@@ -132,7 +128,7 @@ public class CacheMemory {
                 storeNewBlock(nextPositionToUse, block);
             }
             if(type.equals("R")) mesi.readMiss(blockTag,arrayCpu,cpuRequester,ram);
-            else if(type.equals("W"))  mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,block,memoryPosition);;
+            else if(type.equals("W"))  mesi.writeMiss(blockTag,arrayCpu,cpuRequester,ram,block,memoryPosition);
         }
         return block;
     }
@@ -143,7 +139,6 @@ public class CacheMemory {
         if (isBlockStoredInCache(blockTag)) {
             int blockPos = getBlockPosWithBlockTag(blockTag);
             values[blockPos] = newBlock;
-//            mesi.writeHit(blockTag,arrayCpu,cpuRequester);
 
         } else {
             if (!isCacheFull()) {
